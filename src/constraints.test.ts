@@ -1,7 +1,7 @@
 import "mocha"
 import { expect } from "chai"
 import { parse } from "tipa"
-import { NOCODA, ONSET } from "./constraints"
+import { NOCODA, ONSET, MAX } from "./constraints"
 
 describe("NOCODA", () => {
 
@@ -51,36 +51,36 @@ describe("ONSET", () => {
 
 })
 
-// describe("MAX", () => {
+describe("MAX", () => {
 
-//     it("should assign zero violations to faithful candidate", () => {
-//         const input = tokenize(".ma.")
-//         const output = tokenize(".ma.")
-//         const correspondence = [0, 1, 2, 3]
-//         if (input && output) {
-//             const violations = MAX(input, output, correspondence)
-//             expect(violations).to.equal(0)
-//         }
-//     })
+    it("should assign zero violations to faithful candidate", () => {
+        const input = parse(".ma.")
+        const output = parse(".ma.")
+        const correspondence = [0, 1, 2, 3]
+        if (input && output) {
+            const violations = MAX(input, output, correspondence)
+            expect(violations).to.equal(0)
+        }
+    })
 
-//     it("should assign one violation", () => {
-//         const input = tokenize(".ma.")
-//         const output = tokenize(".m.")
-//         const correspondence = [0, 1, null, 2]
-//         if (input && output) {
-//             const violations = MAX(input, output, correspondence)
-//             expect(violations).to.equal(1)
-//         }
-//     })
+    it("should assign one violation for one deletion", () => {
+        const input = parse(".ma.")
+        const output = parse(".m.")
+        const correspondence = [0, 1, null, 2]
+        if (input && output) {
+            const violations = MAX(input, output, correspondence)
+            expect(violations).to.equal(1)
+        }
+    })
 
-//     it("should not assign violations for epenthesis", () => {
-//         const input = tokenize(".ma.")
-//         const output = tokenize(".mat.")
-//         const correspondence = [0, 1, 2, 4]
-//         if (input && output) {
-//             const violations = MAX(input, output, correspondence)
-//             expect(violations).to.equal(0)
-//         }
-//     })
+    it("should not assign violations for epenthesis", () => {
+        const input = parse(".ma.")
+        const output = parse(".mat.")
+        const correspondence = [0, 1, 2, 4]
+        if (input && output) {
+            const violations = MAX(input, output, correspondence)
+            expect(violations).to.equal(0)
+        }
+    })
 
-// })
+})
