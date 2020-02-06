@@ -1,4 +1,5 @@
 # Optimality
+[![version](https://img.shields.io/npm/v/optimality.svg)](https://www.npmjs.org/package/optimality)
 
 *Optimality* is a TypeScript package which implements common constraints from Optimality Theory and provides a clear, typed interface for reasoning about them.
 
@@ -15,6 +16,15 @@ For NPM:
 ```bash
 $ npm install optimality
 ```
+
+## Constraints
+
+- `NOCODA`
+- `ONSET`
+- `MAX`
+- `NODORSAL`
+- `NOCORONAL`
+- `NOGLOTTAL`
 
 ## Types
 
