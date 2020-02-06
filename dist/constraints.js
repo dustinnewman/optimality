@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var tipa_1 = require("tipa");
 function NOCODA(output) {
     var violations = 0;
     var num_syllables = output.length;
@@ -31,8 +32,59 @@ function ONSET(output) {
     return violations;
 }
 exports.ONSET = ONSET;
-function MAX(input, output, correspondence) {
+function PLACE_CONSTRAINT(_output, place_fn) {
     var violations = 0;
+    var output = tipa_1.desyllabify(_output, {
+        leading_syllab: true,
+        trailing_syllab: true
+    });
+    if (!output) {
+        return 0;
+    }
+    var num_syllables = output.length;
+    for (var i = 0; i < num_syllables; i++) {
+        var curr = output[i];
+        if (tipa_1.is_phone(curr) && tipa_1.is_consonant(curr)) {
+            if (Array.isArray(curr)) {
+                if (place_fn(curr[0].place)) {
+                    violations += 1;
+                }
+            }
+            else {
+                if (place_fn(curr.place)) {
+                    violations += 1;
+                }
+            }
+        }
+    }
+    return violations;
+}
+function NODORSAL(output) {
+    return PLACE_CONSTRAINT(output, tipa_1.is_dorsal);
+}
+exports.NODORSAL = NODORSAL;
+function NOCORONAL(output) {
+    return PLACE_CONSTRAINT(output, tipa_1.is_coronal);
+}
+exports.NOCORONAL = NOCORONAL;
+function NOGLOTTAL(output) {
+    return PLACE_CONSTRAINT(output, tipa_1.is_laryngeal);
+}
+exports.NOGLOTTAL = NOGLOTTAL;
+function MAX(_input, _output, correspondence) {
+    var violations = 0;
+    var input = tipa_1.desyllabify(_input, {
+        leading_syllab: true,
+        trailing_syllab: true
+    });
+    var output = tipa_1.desyllabify(_output, {
+        leading_syllab: true,
+        trailing_syllab: true
+    });
+    if (!(input && output)) {
+        // Could not desyllabify input words
+        return 0;
+    }
     var len = correspondence.length;
     for (var i = 0; i < len; i++) {
         var corr = correspondence[i];
@@ -41,31 +93,32 @@ function MAX(input, output, correspondence) {
         // However we need to make sure there are no illegal
         // correspondences like consonant -> diacritic/supra
         if (corr !== null) {
-            // const inp = input[i]
-            // const outp = output[corr]
-            // const inp_is_diac = is_diacritic(inp)
-            // const outp_is_diac = is_diacritic(outp)
-            // const inp_is_supra = is_supra(inp)
-            // const outp_is_supra = is_supra(outp)
-            // if (inp_is_diac !== outp_is_diac) {
-            //     violations += 1
-            //     continue
-            // } else if (inp_is_supra !== outp_is_supra) {
-            //     violations += 1
-            //     continue
-            // } else if (is_phone(inp) && is_phone(outp)) {
-            //     const inp_is_cons = is_consonant(inp)
-            //     const outp_is_cons = is_consonant(outp)
-            //     const inp_is_vow = is_vowel(inp)
-            //     const outp_is_vow = is_vowel(outp)
-            //     if (inp_is_cons !== outp_is_cons) {
-            //         violations += 1
-            //         continue
-            //     } else if (inp_is_vow !== outp_is_vow) {
-            //         violations += 1
-            //         continue
-            //     }
-            // }
+            var inp = input[i];
+            var outp = output[corr];
+            if (tipa_1.is_phone(inp) && tipa_1.is_phone(outp)) {
+                var inp_is_cons = tipa_1.is_consonant(inp);
+                var outp_is_cons = tipa_1.is_consonant(outp);
+                var inp_is_vow = tipa_1.is_vowel(inp);
+                var outp_is_vow = tipa_1.is_vowel(outp);
+                if (inp_is_cons !== outp_is_cons) {
+                    violations += 1;
+                    continue;
+                }
+                else if (inp_is_vow !== outp_is_vow) {
+                    violations += 1;
+                    continue;
+                }
+            }
+            else if (!Array.isArray(inp) && !Array.isArray(outp)) {
+                if (tipa_1.is_diacritic(inp) !== tipa_1.is_diacritic(outp)) {
+                    violations += 1;
+                    continue;
+                }
+                else if (tipa_1.is_supra(inp) !== tipa_1.is_supra(outp)) {
+                    violations += 1;
+                    continue;
+                }
+            }
         }
         else {
             // If correspondent is null then there

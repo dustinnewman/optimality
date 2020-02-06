@@ -1,4 +1,16 @@
-import { word, correspondence } from "tipa"
+import {
+    word,
+    desyllabify,
+    is_diacritic,
+    is_phone,
+    is_consonant,
+    is_vowel,
+    is_supra,
+    is_dorsal,
+    is_coronal,
+    is_laryngeal
+} from "tipa"
+import { correspondence } from "./types"
 
 export function NOCODA(output: word): number {
     let violations = 0
@@ -34,8 +46,64 @@ export function ONSET(output: word): number {
     return violations
 }
 
-export function MAX(input: word, output: word, correspondence: correspondence): number {
+function PLACE_CONSTRAINT(_output: word, place_fn: (place: string) => boolean): number {
     let violations = 0
+
+    const output = desyllabify(_output, {
+        leading_syllab: true,
+        trailing_syllab: true
+    })
+
+    if (!output) {
+        return 0
+    }
+
+    const num_syllables = output.length
+    for (let i = 0; i < num_syllables; i++) {
+        const curr = output[i]
+        if (is_phone(curr) && is_consonant(curr)) {
+            if (Array.isArray(curr)) {
+                if (place_fn(curr[0].place)) {
+                    violations += 1
+                }
+            } else {
+                if (place_fn(curr.place)) {
+                    violations += 1
+                }
+            }
+        }
+    }
+
+    return violations
+}
+
+export function NODORSAL(output: word): number {
+    return PLACE_CONSTRAINT(output, is_dorsal)
+}
+
+export function NOCORONAL(output: word): number {
+    return PLACE_CONSTRAINT(output, is_coronal)
+}
+
+export function NOGLOTTAL(output: word): number {
+    return PLACE_CONSTRAINT(output, is_laryngeal)
+}
+
+export function MAX(_input: word, _output: word, correspondence: correspondence): number {
+    let violations = 0
+
+    const input = desyllabify(_input, {
+        leading_syllab: true,
+        trailing_syllab: true
+    })
+    const output = desyllabify(_output, {
+        leading_syllab: true,
+        trailing_syllab: true
+    })
+    if (!(input && output)) {
+        // Could not desyllabify input words
+        return 0
+    }
 
     const len = correspondence.length
     for (let i = 0; i < len; i++) {
@@ -45,33 +113,31 @@ export function MAX(input: word, output: word, correspondence: correspondence): 
         // However we need to make sure there are no illegal
         // correspondences like consonant -> diacritic/supra
         if (corr !== null) {
-            // const inp = input[i]
-            // const outp = output[corr]
+            const inp = input[i]
+            const outp = output[corr]
 
-            // const inp_is_diac = is_diacritic(inp)
-            // const outp_is_diac = is_diacritic(outp)
-            // const inp_is_supra = is_supra(inp)
-            // const outp_is_supra = is_supra(outp)
-            // if (inp_is_diac !== outp_is_diac) {
-            //     violations += 1
-            //     continue
-            // } else if (inp_is_supra !== outp_is_supra) {
-            //     violations += 1
-            //     continue
-            // } else if (is_phone(inp) && is_phone(outp)) {
-            //     const inp_is_cons = is_consonant(inp)
-            //     const outp_is_cons = is_consonant(outp)
-            //     const inp_is_vow = is_vowel(inp)
-            //     const outp_is_vow = is_vowel(outp)
+            if (is_phone(inp) && is_phone(outp)) {
+                const inp_is_cons = is_consonant(inp)
+                const outp_is_cons = is_consonant(outp)
+                const inp_is_vow = is_vowel(inp)
+                const outp_is_vow = is_vowel(outp)
 
-            //     if (inp_is_cons !== outp_is_cons) {
-            //         violations += 1
-            //         continue
-            //     } else if (inp_is_vow !== outp_is_vow) {
-            //         violations += 1
-            //         continue
-            //     }
-            // }
+                if (inp_is_cons !== outp_is_cons) {
+                    violations += 1
+                    continue
+                } else if (inp_is_vow !== outp_is_vow) {
+                    violations += 1
+                    continue
+                }
+            } else if (!Array.isArray(inp) && !Array.isArray(outp)) {
+                if (is_diacritic(inp) !== is_diacritic(outp)) {
+                    violations += 1
+                    continue
+                } else if (is_supra(inp) !== is_supra(outp)) {
+                    violations += 1
+                    continue
+                }
+            }
         } else {
             // If correspondent is null then there
             // is no correspondent in the output

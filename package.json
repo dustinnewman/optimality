@@ -1,6 +1,6 @@
 {
   "name": "optimality",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -27,6 +27,6 @@
     "typescript": "^3.7.5"
   },
   "dependencies": {
-    "tipa": "^1.0.9"
+    "tipa": "^1.0.12"
   }
 }

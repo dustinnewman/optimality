@@ -1,7 +1,7 @@
 import "mocha"
 import { expect } from "chai"
 import { parse } from "tipa"
-import { NOCODA, ONSET, MAX } from "./constraints"
+import { NOCODA, ONSET, MAX, NODORSAL } from "./constraints"
 
 describe("NOCODA", () => {
 
@@ -83,4 +83,50 @@ describe("MAX", () => {
         }
     })
 
+    it("should assign violations for correspondences that make no sense", () => {
+        const input = parse(".matə.")
+        const output = parse(".ma.ə.")
+        const correspondence = [0, 1, 2, 3, 4, 5]
+        if (input && output) {
+            const violations = MAX(input, output, correspondence)
+            expect(violations).to.equal(1)
+        }
+    })
+
+    it("should assign violations for correspondences that make no sense", () => {
+        const input = parse("matəf")
+        const output = parse("ma.əf")
+        const correspondence = [0, 1, 2, 3, 4]
+        if (input && output) {
+            const violations = MAX(input, output, correspondence)
+            expect(violations).to.equal(1)
+        }
+    })
+
+})
+
+describe("NODORSAL", () => {
+    it("should assign a violation for one dorsal consonsonant", () => {
+        const word = parse("k")
+        if (word) {
+            const violations = NODORSAL(word)
+            expect(violations).to.equal(1)
+        }
+    })
+
+    it("should assign a violation for dorsals with one diacritic", () => {
+        const word = parse("kʰ")
+        if (word) {
+            const violations = NODORSAL(word)
+            expect(violations).to.equal(1)
+        }
+    })
+
+    it("should assign a violation for dorsals with diacritics", () => {
+        const word = parse("ɡ̥ʰ")
+        if (word) {
+            const violations = NODORSAL(word)
+            expect(violations).to.equal(1)
+        }
+    })
 })

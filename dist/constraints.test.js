@@ -71,4 +71,45 @@ describe("MAX", function () {
             chai_1.expect(violations).to.equal(0);
         }
     });
+    it("should assign violations for correspondences that make no sense", function () {
+        var input = tipa_1.parse(".matə.");
+        var output = tipa_1.parse(".ma.ə.");
+        var correspondence = [0, 1, 2, 3, 4, 5];
+        if (input && output) {
+            var violations = constraints_1.MAX(input, output, correspondence);
+            chai_1.expect(violations).to.equal(1);
+        }
+    });
+    it("should assign violations for correspondences that make no sense", function () {
+        var input = tipa_1.parse("matəf");
+        var output = tipa_1.parse("ma.əf");
+        var correspondence = [0, 1, 2, 3, 4];
+        if (input && output) {
+            var violations = constraints_1.MAX(input, output, correspondence);
+            chai_1.expect(violations).to.equal(1);
+        }
+    });
+});
+describe("NODORSAL", function () {
+    it("should assign a violation for one dorsal consonsonant", function () {
+        var word = tipa_1.parse("k");
+        if (word) {
+            var violations = constraints_1.NODORSAL(word);
+            chai_1.expect(violations).to.equal(1);
+        }
+    });
+    it("should assign a violation for dorsals with one diacritic", function () {
+        var word = tipa_1.parse("kʰ");
+        if (word) {
+            var violations = constraints_1.NODORSAL(word);
+            chai_1.expect(violations).to.equal(1);
+        }
+    });
+    it("should assign a violation for dorsals with diacritics", function () {
+        var word = tipa_1.parse("ɡ̥ʰ");
+        if (word) {
+            var violations = constraints_1.NODORSAL(word);
+            chai_1.expect(violations).to.equal(1);
+        }
+    });
 });
