@@ -116,20 +116,7 @@ export function MAX(_input: word, _output: word, correspondence: correspondence)
             const inp = input[i]
             const outp = output[corr]
 
-            if (is_phone(inp) && is_phone(outp)) {
-                const inp_is_cons = is_consonant(inp)
-                const outp_is_cons = is_consonant(outp)
-                const inp_is_vow = is_vowel(inp)
-                const outp_is_vow = is_vowel(outp)
-
-                if (inp_is_cons !== outp_is_cons) {
-                    violations += 1
-                    continue
-                } else if (inp_is_vow !== outp_is_vow) {
-                    violations += 1
-                    continue
-                }
-            } else if (!Array.isArray(inp) && !Array.isArray(outp)) {
+            if (!Array.isArray(inp) && !Array.isArray(outp)) {
                 if (is_diacritic(inp) !== is_diacritic(outp)) {
                     violations += 1
                     continue

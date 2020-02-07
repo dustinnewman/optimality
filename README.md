@@ -3,6 +3,19 @@
 
 *Optimality* is a TypeScript package which implements common constraints from Optimality Theory and provides a clear, typed interface for reasoning about them.
 
+```js
+const input = "hen"
+const candidates = [{
+    word: "hen",
+    correspondence: [0, 1, 2]
+}, {
+    word: "he",
+    correspondence: [0, 1, null]
+}]
+const constraints = [MAX, NOCODA]
+const result = EVAL(input, candidates, constraints)
+```
+
 ## Installation
 
 For Yarn:

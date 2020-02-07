@@ -95,21 +95,7 @@ function MAX(_input, _output, correspondence) {
         if (corr !== null) {
             var inp = input[i];
             var outp = output[corr];
-            if (tipa_1.is_phone(inp) && tipa_1.is_phone(outp)) {
-                var inp_is_cons = tipa_1.is_consonant(inp);
-                var outp_is_cons = tipa_1.is_consonant(outp);
-                var inp_is_vow = tipa_1.is_vowel(inp);
-                var outp_is_vow = tipa_1.is_vowel(outp);
-                if (inp_is_cons !== outp_is_cons) {
-                    violations += 1;
-                    continue;
-                }
-                else if (inp_is_vow !== outp_is_vow) {
-                    violations += 1;
-                    continue;
-                }
-            }
-            else if (!Array.isArray(inp) && !Array.isArray(outp)) {
+            if (!Array.isArray(inp) && !Array.isArray(outp)) {
                 if (tipa_1.is_diacritic(inp) !== tipa_1.is_diacritic(outp)) {
                     violations += 1;
                     continue;

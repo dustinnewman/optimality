@@ -5,7 +5,7 @@ import { NOCODA, ONSET, MAX, NODORSAL } from "./constraints"
 
 describe("NOCODA", () => {
 
-    it("should assign zero violations to a syllable with no coda", () => {
+    it("assigns zero violations to a syllable with no coda", () => {
         const word = parse(".ma.")
         if (word) {
             const violations = NOCODA(word)
@@ -13,7 +13,7 @@ describe("NOCODA", () => {
         }
     })
 
-    it("should assign one violation to a syllable with a coda", () => {
+    it("assigns one violation to a syllable with a coda", () => {
         const word = parse(".mæt.")
         if (word) {
             const violations = NOCODA(word)
@@ -21,7 +21,7 @@ describe("NOCODA", () => {
         }
     })
 
-    it("should assign one violation to a syllable with a coda", () => {
+    it("assigns one violation to a syllable with a coda", () => {
         const word = parse(".mæv̥.ə")
         if (word) {
             const violations = NOCODA(word)
@@ -33,7 +33,7 @@ describe("NOCODA", () => {
 
 describe("ONSET", () => {
 
-    it("should assign zero violations to a syllable with an onset", () => {
+    it("assigns zero violations to a syllable with an onset", () => {
         const word = parse(".ma.")
         if (word) {
             const violations = ONSET(word)
@@ -41,7 +41,7 @@ describe("ONSET", () => {
         }
     })
 
-    it("should assign one violation to a syllable without an onset", () => {
+    it("assigns one violation to a syllable without an onset", () => {
         const word = parse(".æt.")
         if (word) {
             const violations = ONSET(word)
@@ -53,7 +53,7 @@ describe("ONSET", () => {
 
 describe("MAX", () => {
 
-    it("should assign zero violations to faithful candidate", () => {
+    it("assigns zero violations to faithful candidate", () => {
         const input = parse(".ma.")
         const output = parse(".ma.")
         const correspondence = [0, 1, 2, 3]
@@ -63,7 +63,7 @@ describe("MAX", () => {
         }
     })
 
-    it("should assign one violation for one deletion", () => {
+    it("assigns one violation for one deletion", () => {
         const input = parse(".ma.")
         const output = parse(".m.")
         const correspondence = [0, 1, null, 2]
@@ -73,7 +73,7 @@ describe("MAX", () => {
         }
     })
 
-    it("should not assign violations for epenthesis", () => {
+    it("does not assign violations for epenthesis", () => {
         const input = parse(".ma.")
         const output = parse(".mat.")
         const correspondence = [0, 1, 2, 4]
@@ -83,7 +83,7 @@ describe("MAX", () => {
         }
     })
 
-    it("should assign violations for correspondences that make no sense", () => {
+    it("assigns violations for correspondences that make no sense", () => {
         const input = parse(".matə.")
         const output = parse(".ma.ə.")
         const correspondence = [0, 1, 2, 3, 4, 5]
@@ -93,7 +93,7 @@ describe("MAX", () => {
         }
     })
 
-    it("should assign violations for correspondences that make no sense", () => {
+    it("assigns violations for correspondences that make no sense", () => {
         const input = parse("matəf")
         const output = parse("ma.əf")
         const correspondence = [0, 1, 2, 3, 4]
@@ -106,7 +106,7 @@ describe("MAX", () => {
 })
 
 describe("NODORSAL", () => {
-    it("should assign a violation for one dorsal consonsonant", () => {
+    it("assigns a violation for one dorsal consonsonant", () => {
         const word = parse("k")
         if (word) {
             const violations = NODORSAL(word)
@@ -114,7 +114,7 @@ describe("NODORSAL", () => {
         }
     })
 
-    it("should assign a violation for dorsals with one diacritic", () => {
+    it("assigns a violation for dorsals with one diacritic", () => {
         const word = parse("kʰ")
         if (word) {
             const violations = NODORSAL(word)
@@ -122,7 +122,7 @@ describe("NODORSAL", () => {
         }
     })
 
-    it("should assign a violation for dorsals with diacritics", () => {
+    it("assigns a violation for dorsals with diacritics", () => {
         const word = parse("ɡ̥ʰ")
         if (word) {
             const violations = NODORSAL(word)
