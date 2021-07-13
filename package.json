@@ -11,10 +11,10 @@
     "test": "mocha -r ts-node/register src/*.test.ts"
   },
   "keywords": [],
-  "author": "Dustin Newman",
+  "author": "",
   "license": "ISC",
   "repository": {
-    "url": "https://github.com/dustinnewman98/optimality.git",
+    "url": "https://github.com/uncomputation/optimality.git",
     "type": "git"
   },
   "devDependencies": {
