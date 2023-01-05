@@ -52,30 +52,11 @@ function do_EVAL(input: word, candidates: candidate[], constraints: ranking): EV
         let min: number | undefined = undefined
         let min_candidate: number | undefined = undefined
         candidates.forEach((cand, row) => {
-            if (Array.isArray(constraint_group)) {
-                constraint_group.forEach(constraint => {
-                    const violations =
-                        do_constraint(input, cand, constraint, tableau[row])
-                    // Only count those candidates still in
-                    // the race
-                    if (winner[row] !== false) {
-                        if (min === undefined) {
-                            min = violations
-                            min_candidate = row
-                        } else if (violations < min) {
-                            if (min_candidate) {
-                                winner[min_candidate] = false
-                            }
-                            min = violations
-                            min_candidate = row
-                        } else if (violations > min) {
-                            winner[row] = false
-                        }
-                    }
-                })
-            } else {
+            constraint_group.forEach(constraint => {
                 const violations =
-                    do_constraint(input, cand, constraint_group, tableau[row])
+                    do_constraint(input, cand, constraint, tableau[row])
+                // Only count those candidates still in
+                // the race
                 if (winner[row] !== false) {
                     if (min === undefined) {
                         min = violations
@@ -90,7 +71,7 @@ function do_EVAL(input: word, candidates: candidate[], constraints: ranking): EV
                         winner[row] = false
                     }
                 }
-            }
+            })
         })
     })
 

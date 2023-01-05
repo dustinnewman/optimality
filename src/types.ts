@@ -17,7 +17,7 @@ export type candidate = word | {
     correspondence: correspondence
 }
 
-export type ranking = (constraint | constraint[])[]
+export type ranking = constraint[][]
 
 export function is_single_word(c: candidate): c is word {
     return Array.isArray(c)

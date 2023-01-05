@@ -14,7 +14,7 @@ describe("EVAL", () => {
             word: "he",
             correspondence: [0, 1, null]
         }]
-        const constraints: ranking = [MAX, NOCODA]
+        const constraints: ranking = [[MAX], [NOCODA]]
         const result = EVAL("hen", candidates, constraints)
         expect(result).to.not.be.undefined
         if (result === undefined) return
